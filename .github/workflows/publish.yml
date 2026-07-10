@@ -27,15 +27,16 @@ jobs:
 
       - name: Run tests (no network)
         run: |
-          echo "=== Directory structure ==="
-          ls -la src/
-          ls -la src/rag_mcp/
-          echo "=== Python path ==="
-          python -c "import sys; print(sys.path[:5])"
-          echo "=== Import test ==="
-          python -c "import sys; sys.path.insert(0, '$PWD/src'); print(sys.path[0]); from rag_mcp.chunker import SmartChunker; print('OK')"
-          echo "=== Pytest ==="
-          PYTHONPATH="$PWD/src" python -m pytest tests/ -v -m "not network"
+          # CI checkout 结构不同，rag_mcp 既可能在 src/rag_mcp/ 也可能直接在 src/
+          # 两个路径都加入 PYTHONPATH
+          export PYTHONPATH="$PWD/src:$PWD/src/rag_mcp:$PWD:$PYTHONPATH"
+          # CI flat structure: if rag_mcp files are directly in src/, nest them
+          if [ -f src/__init__.py ] && [ ! -d src/rag_mcp ]; then
+            mkdir -p src/rag_mcp
+            cp -r src/* src/rag_mcp/
+            rm -rf src/__init__.py src/*.py src/parsers
+          fi
+          python -m pytest tests/ -v -m "not network"
 
   build:
     runs-on: ubuntu-latest
@@ -50,6 +51,13 @@ jobs:
 
       - name: Build wheel
         run: |
+          # CI flat structure fix
+          if [ -f src/__init__.py ] && [ ! -d src/rag_mcp ]; then
+            mkdir -p src/rag_mcp
+            shopt -s extglob
+            cp -r src/!(rag_mcp) src/rag_mcp/
+            rm -rf src/!(rag_mcp)
+          fi
           python -m pip install --upgrade pip build
           pip install -e .
           python build/build_release.py --no-cython
