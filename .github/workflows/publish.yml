@@ -27,8 +27,14 @@ jobs:
 
       - name: Run tests (no network)
         run: |
-          echo "PYTHONPATH=$PWD/src"
-          python -c "import sys; sys.path.insert(0, 'src'); from rag_mcp.chunker import SmartChunker; print('OK:', SmartChunker)"
+          echo "=== Directory structure ==="
+          ls -la src/
+          ls -la src/rag_mcp/
+          echo "=== Python path ==="
+          python -c "import sys; print(sys.path[:5])"
+          echo "=== Import test ==="
+          python -c "import sys; sys.path.insert(0, '$PWD/src'); print(sys.path[0]); from rag_mcp.chunker import SmartChunker; print('OK')"
+          echo "=== Pytest ==="
           PYTHONPATH="$PWD/src" python -m pytest tests/ -v -m "not network"
 
   build:
