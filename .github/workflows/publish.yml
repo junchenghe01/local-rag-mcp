@@ -26,10 +26,10 @@ jobs:
           pip install pytest lancedb pyarrow watchdog loguru pypdf python-docx openpyxl pandas fastapi uvicorn aiofiles httpx python-dotenv pydantic "mcp[cli]"
 
       - name: Run tests (no network)
-        env:
-          PYTHONPATH: src
         run: |
-          python -m pytest tests/ -v -m "not network"
+          echo "PYTHONPATH=$PWD/src"
+          python -c "import sys; sys.path.insert(0, 'src'); from rag_mcp.chunker import SmartChunker; print('OK:', SmartChunker)"
+          PYTHONPATH="$PWD/src" python -m pytest tests/ -v -m "not network"
 
   build:
     runs-on: ubuntu-latest
