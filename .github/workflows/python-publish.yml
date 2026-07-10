@@ -23,11 +23,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e .
+          pip install -e ".[test]"
 
       - name: Run tests (no network)
         run: |
-          pip install pytest
           python -m pytest tests/ -v -m "not network"
 
   build:
