@@ -23,9 +23,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[test]"
+          pip install pytest lancedb pyarrow watchdog loguru pypdf python-docx openpyxl pandas fastapi uvicorn aiofiles httpx python-dotenv pydantic "mcp[cli]"
 
       - name: Run tests (no network)
+        env:
+          PYTHONPATH: src
         run: |
           python -m pytest tests/ -v -m "not network"
 
