@@ -28,19 +28,6 @@ build = [
     "cython>=3.0",
     "setuptools>=75",
 ]
-test = [
-    "pytest>=7.0",
-]
 
 [project.scripts]
 rag-mcp = "rag_mcp.server:main"
-
-[build-system]
-requires = ["setuptools>=75", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools.package-dir]
-"" = "src"
-
-[tool.setuptools.packages.find]
-where = ["src"]
