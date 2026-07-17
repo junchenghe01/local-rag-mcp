@@ -84,20 +84,20 @@ for _noisy in ("httpx", "httpcore", "urllib3", "asyncio", "watchfiles",
 # ---------------------------------------------------------------------------
 # 公开 API
 # ---------------------------------------------------------------------------
-def get_logger(name: str = "rag_mcp"):
-    """获取以 ``rag_mcp`` 为根的层级 logger。
+def get_logger(name: str = "local_rag_mcp"):
+    """获取以 ``local_rag_mcp`` 为根的层级 logger。
 
     返回 Loguru logger 的 bind(name=name) 实例，兼容旧 logging API。
     支持 .info(), .debug(), .warning(), .error(), .exception() 等方法。
 
     Args:
-        name: 推荐传 ``__name__``，自动挂载到 ``rag_mcp.子模块`` 命名空间。
+        name: 推荐传 ``__name__``，自动挂载到 ``local_rag_mcp.子模块`` 命名空间。
 
     Returns:
         配置好的 loguru.Logger 实例（bind 了 name）。
     """
-    if not name.startswith("rag_mcp"):
-        name = f"rag_mcp.{name}"
+    if not name.startswith("local_rag_mcp"):
+        name = f"local_rag_mcp.{name}"
     return _loguru_root.bind(name=name)
 
 

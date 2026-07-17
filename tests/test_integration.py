@@ -6,7 +6,7 @@
 import shutil
 import pytest
 
-from rag_mcp.engine import (
+from local_rag_mcp.engine import (
     init_project,
     load_project_docs,
     query_project_docs,
@@ -79,7 +79,7 @@ class TestEndToEnd:
     @require_ollama
     def test_ingest_then_query(self, temp_dir, sample_txt):
         """单文件摄取 → 查询 → 删除。"""
-        import rag_mcp.engine as eng
+        import local_rag_mcp.engine as eng
 
         init_project(str(temp_dir))
         pipeline = eng.project_context["pipeline"]

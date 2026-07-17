@@ -4,7 +4,7 @@
 """
 
 import pytest
-from rag_mcp.parsers import get_parser, PdfParser, WordParser, ExcelParser, TextParser
+from local_rag_mcp.parsers import get_parser, PdfParser, WordParser, ExcelParser, TextParser
 
 
 class TestParserFactory:

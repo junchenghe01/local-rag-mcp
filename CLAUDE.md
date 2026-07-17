@@ -6,26 +6,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 RAG Knowledge MCP Server — FastMCP + LanceDB + Hybrid Search, full MCP 5 features (Tools/Resources/Prompts/Sampling/Roots).
 
-Code protection via Cython (.pyd) for release builds.
-
 ## Commands
 
 ```bash
-.\.venv\Scripts\python.exe -m src.rag_mcp.server              # 开发模式启动
-.\.venv\Scripts\python.exe build\build_release.py             # 构建 wheel (Cython .pyd)
-.\.venv\Scripts\python.exe build\build_release.py --install   # 构建 + 安装
-.\.venv\Scripts\python.exe build\build_release.py --no-cython # 跳过 Cython
+.\.venv\Scripts\python.exe -m src.local_rag_mcp.server        # 开发模式启动
 .\.venv\Scripts\python.exe -m pip install -e .                 # 可编辑安装
+.\.venv\Scripts\python.exe -m build                            # 构建 sdist + wheel (dist/)
 .\.venv\Scripts\python.exe -m pytest tests/ -v                 # 运行测试
 ```
 
 ## Architecture
 
 ```
-src/rag_mcp/
+src/local_rag_mcp/
 ├── __init__.py       # Package marker
 ├── server.py         # FastMCP entry — 7 tools + 2 resources + 1 prompt + Sampling + Roots
-├── engine.py         # [Cython target] Core: EmbeddingClient, HybridSearchEngine, IngestionPipeline
+├── engine.py         # Core: EmbeddingClient, HybridSearchEngine, IngestionPipeline
 ├── lancedb_store.py  # LanceDB storage layer (IVF-PQ + BM25 FTS)
 ├── chunker.py        # Smart chunking (600char/60overlap, sentence boundary)
 ├── parsers/          # Multi-modal ETL parsers
@@ -38,9 +34,6 @@ src/rag_mcp/
 ├── sampling.py       # Sampling callback for noisy document cleaning
 ├── logger.py         # Loguru-based structured logging (daily rotation)
 └── status.py         # Thread-safe server status tracking
-
-build/
-└── build_release.py   # Wheel build (Cython .pyd + wheel packaging)
 
 tests/                  # Test suite (80 tests)
 ```

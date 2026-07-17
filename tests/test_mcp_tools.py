@@ -6,7 +6,7 @@
 import asyncio
 import pytest
 
-from rag_mcp.server import mcp
+from local_rag_mcp.server import mcp
 
 
 def _run(coro):
@@ -118,7 +118,7 @@ class TestServerInfo:
         assert "Enterprise" in mcp.name or "RAG" in mcp.name
 
     def test_status_module(self):
-        from rag_mcp.status import ServerState, server_status
+        from local_rag_mcp.status import ServerState, server_status
         assert ServerState.IDLE is not None
         snap = server_status.to_dict()
         assert "status" in snap

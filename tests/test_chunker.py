@@ -9,7 +9,7 @@
 """
 
 import pytest
-from rag_mcp.chunker import SmartChunker
+from local_rag_mcp.chunker import SmartChunker
 
 
 class TestSmartChunker:

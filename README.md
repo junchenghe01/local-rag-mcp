@@ -1,4 +1,4 @@
-# RAG MCP Server v2.1.0
+# Local RAG MCP Server v2.1.0
 
 基于 FastMCP + LanceDB 的 RAG 知识库 MCP 服务器，完整实现 MCP 五大核心特征 (Tools / Resources / Prompts / Sampling / Roots)。
 
@@ -18,10 +18,10 @@
 ## 项目结构
 
 ```
-src/rag_mcp/
+src/local_rag_mcp/
 ├── __init__.py         # 包标记
 ├── server.py           # FastMCP 入口 — 7 工具 + 2 资源 + 1 提示词 + Sampling + Roots
-├── engine.py           # [Cython] 核心引擎 — EmbeddingClient + HybridSearchEngine + IngestionPipeline
+├── engine.py           # 核心引擎 — EmbeddingClient + HybridSearchEngine + IngestionPipeline
 ├── lancedb_store.py    # LanceDB 存储层 (IVF-PQ + BM25 FTS)
 ├── chunker.py          # 智能分块器 (600char/60overlap, 句尾防截断)
 ├── parsers/            # 多模态 ETL 解析器
@@ -49,41 +49,38 @@ python -m venv .venv
 #   EMBED_MODEL_NAME=qwen3-embedding:8b
 #   RAG_PROJECT_PATH=./documents
 
-# 3. 构建 wheel + 安装
-.\.venv\Scripts\python.exe build\build_release.py --install
-
-# 4. 启动
-rag-mcp
+# 3. 启动
+local-rag-mcp
 ```
 
 ## 安装与运行
 
 ```powershell
 # ---- 开发模式 (源码直接跑) ----
-.venv\Scripts\python.exe -m src.rag_mcp.server
+.venv\Scripts\python.exe -m src.local_rag_mcp.server
 
-# ---- 生产模式 (wheel 安装) ----
-# 构建 (Cython .pyd 加密核心模块)
-.venv\Scripts\python.exe build\build_release.py
+# ---- 生产模式 (PyPI 安装) ----
+pip install local-rag-mcp
 
-# 安装
-pip install dist\rag_mcp-2.1.0-py3-none-any.whl
+# 或本地构建 wheel 后安装
+.venv\Scripts\python.exe -m build
+pip install dist\local_rag_mcp-2.1.0-py3-none-any.whl
 
 # 运行 (SSE 默认, 端口 8042)
-rag-mcp
+local-rag-mcp
 
 # 运行 (stdio 模式)
-$env:MCP_TRANSPORT="stdio"; rag-mcp
+$env:MCP_TRANSPORT="stdio"; local-rag-mcp
 
 # 卸载
-pip uninstall rag-mcp -y
+pip uninstall local-rag-mcp -y
 ```
 
 ## 接入 MCP 客户端
 
 ### SSE 模式（推荐）
 
-先启动服务 `rag-mcp`，保持窗口打开：
+先启动服务 `local-rag-mcp`，保持窗口打开：
 
 ```json
 {
@@ -102,7 +99,7 @@ pip uninstall rag-mcp -y
 {
   "mcpServers": {
     "enterprise-local-rag": {
-      "command": "rag-mcp",
+      "command": "local-rag-mcp",
       "env": {
         "MCP_TRANSPORT": "stdio",
         "RAG_PROJECT_PATH": "./documents",
@@ -178,9 +175,9 @@ $$RRF\_Score(d) = \frac{w}{60 + R_{dense}(d)} + \frac{1 - w}{60 + R_{sparse}(d)}
 彩色日志输出到 stderr，格式：`时间 | 级别 | 线程名 | 模块:行号 | 内容`
 
 ```
-20:53:55 | INFO     | MainThread   | rag_mcp.server:67 | Enterprise RAG MCP Server v2.0 启动
-20:53:55 | INFO     | MainThread   | rag_mcp.engine:85 | Embedding: bge-m3 @ http://localhost:11434 (dim=1024)
-20:53:55 | INFO     | MainThread   | rag_mcp.lancedb_store:68 | LanceDB 已连接 (.ragdb_lance/)
+20:53:55 | INFO     | MainThread   | local_rag_mcp.server:67 | Enterprise RAG MCP Server v2.0 启动
+20:53:55 | INFO     | MainThread   | local_rag_mcp.engine:85 | Embedding: bge-m3 @ http://localhost:11434 (dim=1024)
+20:53:55 | INFO     | MainThread   | local_rag_mcp.lancedb_store:68 | LanceDB 已连接 (.ragdb_lance/)
 ```
 
 ### 文件归档

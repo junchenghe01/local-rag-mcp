@@ -4,7 +4,7 @@
 """
 
 import pytest
-from rag_mcp.lancedb_store import LanceDBStore, create_store
+from local_rag_mcp.lancedb_store import LanceDBStore, create_store
 
 # 测试用向量维度 (与 qwen3-embedding:8b 一致)
 TEST_DIM = 4096

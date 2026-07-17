@@ -6,7 +6,7 @@
 import os
 import pytest
 
-from rag_mcp.engine import (
+from local_rag_mcp.engine import (
     EmbeddingClient,
     HybridSearchEngine,
     IngestionPipeline,
@@ -17,7 +17,7 @@ from rag_mcp.engine import (
     project_context,
     is_supported_file,
 )
-from rag_mcp.lancedb_store import create_store
+from local_rag_mcp.lancedb_store import create_store
 
 # ---- 跳过标记 (与 conftest.py 同步) ----
 _ollama_url = os.getenv("EMBED_BASE_URL", "http://localhost:11434")
@@ -174,7 +174,7 @@ class TestProjectInit:
 
     def test_query_before_init(self):
         # 重置 project_context
-        import rag_mcp.engine as eng
+        import local_rag_mcp.engine as eng
         eng.project_context["search_engine"] = None
         result = query_project_docs("test")
         assert "初始化项目" in result
@@ -193,7 +193,7 @@ class TestUtils:
         assert not is_supported_file("test.jpg")
 
     def test_get_chunk_neighbors_uninitialized(self):
-        import rag_mcp.engine as eng
+        import local_rag_mcp.engine as eng
         eng.project_context["store"] = None
         result = get_chunk_neighbors("test.txt", 0, "next")
         assert "未初始化" in result
